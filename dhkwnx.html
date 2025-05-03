@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Modern</title>
+  <style>
+    :root {
+      --bg: #1e1e2f;
+      --btn: #2e2e3e;
+      --btn-hover: #3e3e5e;
+      --accent: #4ade80;
+      --text: #ffffff;
+      --operator: #fbbf24;
+      --danger: #ef4444;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .calculator {
+      background-color: #27293d;
+      border-radius: 20px;
+      padding: 25px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .display {
+      background-color: #1e1e2f;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 2.4rem;
+      text-align: right;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.4rem;
+      border: none;
+      border-radius: 12px;
+      background-color: var(--btn);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--btn-hover);
+    }
+
+    .operator {
+      background-color: var(--operator);
+      color: #000;
+    }
+
+    .equal {
+      background-color: var(--accent);
+      color: #000;
+      grid-column: span 2;
+    }
+
+    .clear {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f1f5f9;
+        --btn: #e2e8f0;
+        --btn-hover: #cbd5e1;
+        --text: #1f2937;
+        --accent: #10b981;
+        --operator: #f59e0b;
+        --danger: #dc2626;
+      }
+
+      .calculator {
+        background-color: #ffffff;
+      }
+
+      .display {
+        background-color: #f8fafc;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="appendValue('(')">(</button>
+      <button onclick="appendValue(')')">)</button>
+      <button class="operator" onclick="appendValue('/')">÷</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendValue('*')">×</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equal" onclick="calculateResult()">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+
+    function appendValue(value) {
+      if (display.textContent === '0' || display.textContent === 'Error') {
+        display.textContent = value;
+      } else {
+        display.textContent += value;
+      }
+    }
+
+    function clearDisplay() {
+      display.textContent = '0';
+    }
+
+    function calculateResult() {
+      try {
+        const result = eval(display.textContent.replace(/×/g, '*').replace(/÷/g, '/'));
+        display.textContent = result;
+      } catch {
+        display.textContent = 'Error';
+      }
+    }
+
+    // Tambahan: support keyboard input
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if ('0123456789+-*/().'.includes(key)) {
+        appendValue(key);
+      } else if (key === 'Enter') {
+        calculateResult();
+      } else if (key === 'Backspace') {
+        display.textContent = display.textContent.slice(0, -1) || '0';
+      } else if (key.toLowerCase() === 'c') {
+        clearDisplay();
+      }
+    });
+  </script>
+</body>
+</html>
